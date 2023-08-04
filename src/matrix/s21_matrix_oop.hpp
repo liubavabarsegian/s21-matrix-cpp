@@ -15,8 +15,8 @@ private:
     int rows_, cols_;
     // pointer to the memory where the matrix will be allocated
     double **matrix_;
-    void createMatrix(S21Matrix& other);
-    void deleteMatrix(S21Matrix& other);
+    void createMatrix(S21Matrix& matrix);
+    void deleteMatrix();
 public:
     //constructors and destructors
     S21Matrix();
@@ -26,9 +26,9 @@ public:
     ~S21Matrix();
 
     //getters
-    int GetRows();
-    int GetCols();
-    S21Matrix GetMinor(int rows, int cols, S21Matrix matrix)
+    int GetRows() const;
+    int GetCols() const;
+    S21Matrix GetMinor(int rows, int cols, S21Matrix matrix) const;
 
     //setters
     void SetRows(int n);
@@ -38,15 +38,13 @@ public:
     // assignment operator overload
     S21Matrix& operator=(const S21Matrix& other);
     // index operator overload
-    int& operator()(int row, int col);
-    int& operator()(int row, int col) const;
-    S21Matrix S21Matrix::operator+(const S21Matrix& other);
-    S21Matrix S21Matrix::operator-(const S21Matrix& other);
-    S21Matrix S21Matrix::operator*(const S21Matrix& other);
-    S21Matrix S21Matrix::operator*(double num);
-    bool S21Matrix::operator==(const S21Matrix& other);
-    S21Matrix& operator+=(const S21Matrix& other);
+    double& operator()(int row, int col) const;
     S21Matrix operator+(const S21Matrix& other);
+    S21Matrix operator-(const S21Matrix& other);
+    S21Matrix operator*(const S21Matrix& other);
+    S21Matrix operator*(double num);
+    bool operator==(const S21Matrix& other);
+    S21Matrix& operator+=(const S21Matrix& other);
     S21Matrix& operator-=(const S21Matrix& other);
     S21Matrix& operator*=(const S21Matrix& other);
     S21Matrix& operator*=(double num);
