@@ -3,5 +3,5 @@
 int main()
 {
     S21Matrix a;
-    S21Matrix b(2, 3);
+    S21Matrix b(-1, 1);
 }

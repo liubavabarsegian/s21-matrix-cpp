@@ -5,9 +5,6 @@
 #include <cmath>
 #include <cstring>
 
-#define OK
-#define FAIL
-
 class S21Matrix {
 private:
     // attributes
@@ -49,7 +46,7 @@ public:
     S21Matrix& operator*=(const S21Matrix& other);
     S21Matrix& operator*=(double num);
 
-    // some public methods
+    // // some public methods
     bool EqMatrix(const S21Matrix& other);
     void SumMatrix(const S21Matrix& other);
     void SubMatrix(const S21Matrix& other);

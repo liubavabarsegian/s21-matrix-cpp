@@ -168,14 +168,14 @@ double S21Matrix::Determinant() {
         for (auto i = 0; i < rows_; i++) {
             S21Matrix temp = GetMinor(0, i, *this);
             result += pow(-1, i) * matrix_[0][i] * temp.Determinant();
-            this->deleteMatrix();
+            temp.deleteMatrix();
         }
     }
     return result;
 
 }
 
-S21Matrix GetMinor(int rows, int cols, S21Matrix matrix) {
+S21Matrix S21Matrix::GetMinor(int rows, int cols, S21Matrix matrix) const {
     if (rows <= 0 || cols <= 0) {
         throw std::invalid_argument("Rows and columns must be positive");
     }
