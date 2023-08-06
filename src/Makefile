@@ -1,16 +1,12 @@
 NAME = s21_matrix_oop.a
 CC = gcc
-CFLAGS = -Wall -Werror -Wextra -std=c++17 -lstdc++
-SRCS =	matrix/*.cpp
+CFLAGS = -Wall -Werror -Wextra -std=c++17 -lstdc++ -lm
+SRCS =	matrix/s21_matrix_oop.cpp
 TEST_SRCS =	tests/tests.cpp
-TEST_FLAGS = -lgtest --coverage
-TEST_FLAGS = #-lcheck -lm -lpthread
+TEST_FLAGS = -lgtest -lpthread
 GCOV_FLAGS = -ftest-coverage -fprofile-arcs
-UNAME_S = $(shell uname -s)
-
-ifeq ($(UNAME_S), Linux)
-
-endif
+SRCS_DIR = matrix
+TESTS_DIR = tests
 
 all: $(NAME) test gcov_report
 
@@ -22,24 +18,24 @@ $(NAME):
 
 test:
 	make rebuild
-	$(CC) $(CFLAGS) -c $(TEST_SRCS)
-	$(CC) $(CFLAGS) *.o $(NAME) $(TEST_FLAGS)  -o test
+	g++ $(CFLAGS) -c $(TEST_SRCS)
+	g++ $(CFLAGS) *.o $(NAME) $(TEST_FLAGS)  -o test
 	./test
 
 gcov_report:
-	$(CC) $(CFLAGS) -c $(TEST_SRCS)
-	$(CC)  $(CFLAGS) $(GCOV_FLAGS) -c $(SRCS)
-	$(CC)  $(CFLAGS) $(GCOV_FLAGS) *.o $(TEST_FLAGS_LINUX) -o test
+	g++ $(CFLAGS) -c $(TEST_SRCS)
+	g++  $(CFLAGS) $(GCOV_FLAGS) -c $(SRCS)
+	g++  $(CFLAGS) $(GCOV_FLAGS) *.o $(TEST_FLAGS) -o test
 	./test
 	lcov -t "test" -o test.info -c -d .
 	genhtml -o report test.info
 	open report/index.html
 
 style: 
-	clang-format --style=google *.c *.h tests/*.c -n
+	clang-format --style=google $(SRCS_DIR)/*.cpp $(SRCS_DIR)/*.hpp $(TESTS_DIR)/*.cpp -n
 
 correct_style: 
-	clang-format --style=google *.c *.h tests/*.c -i
+	clang-format --style=google $(SRCS_DIR)/*.cpp $(SRCS_DIR)/*.hpp $(TESTS_DIR)/*.cpp -i
 
 clean:
 	rm -rf *.o *.a test test_linux *.gcno *.gcda *.info report
