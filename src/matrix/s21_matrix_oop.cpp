@@ -77,7 +77,7 @@ void S21Matrix::SetRows(int n) {
       temp(i, j) = 0.0;
     }
   }
-  *this = temp;
+  *this = std::move(temp);
 };
 
 // setter for cols
@@ -94,7 +94,7 @@ void S21Matrix::SetCols(int n) {
       temp(i, j) = 0.0;
     }
   }
-  *this = temp;
+  *this = std::move(temp);
 };
 
 bool S21Matrix::EqMatrix(const S21Matrix& other) const {
@@ -160,7 +160,7 @@ void S21Matrix::MulMatrix(const S21Matrix& other) {
       }
     }
   }
-  *this = result;
+  *this = std::move(result);
 }
 
 S21Matrix S21Matrix::Transpose() const {
