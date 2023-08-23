@@ -35,8 +35,8 @@ TEST(setters, setrows) {
 
 TEST(constructors, all_types) {
   S21Matrix m1;
-  EXPECT_EQ(m1.GetCols(), 3);
-  EXPECT_EQ(m1.GetRows(), 3);
+  EXPECT_EQ(m1.GetCols(), 0);
+  EXPECT_EQ(m1.GetRows(), 0);
 
   S21Matrix m2(2, 2);
   m2(1, 1) = 123.456;
@@ -146,38 +146,6 @@ TEST(functions, complements_with_errors) {
   EXPECT_ANY_THROW(m.CalcComplements());
 }
 
-TEST(functions, complements) {
-  int rows = 3;
-  int cols = 3;
-
-  S21Matrix given(rows, cols);
-  S21Matrix expected(rows, cols);
-
-  given(0, 0) = 1.0;
-  given(0, 1) = 2.0;
-  given(0, 2) = 3.0;
-  given(1, 0) = 0.0;
-  given(1, 1) = 4.0;
-  given(1, 2) = 2.0;
-  given(2, 0) = 5.0;
-  given(2, 1) = 2.0;
-  given(2, 2) = 1.0;
-
-  expected(0, 0) = 0.0;
-  expected(0, 1) = 10.0;
-  expected(0, 2) = -20.0;
-  expected(1, 0) = 4.0;
-  expected(1, 1) = -14.0;
-  expected(1, 2) = 8.0;
-  expected(2, 0) = -8.0;
-  expected(2, 1) = -2.0;
-  expected(2, 2) = 4.0;
-
-  S21Matrix res = given.CalcComplements();
-
-  ASSERT_TRUE(res == expected);
-}
-
 TEST(functions, det) {
   S21Matrix m(5, 5);
 
@@ -228,6 +196,38 @@ TEST(functions, det3) {
 
   double res = m.Determinant();
   ASSERT_NEAR(res, -32, 1e-6);
+}
+
+TEST(functions, complements) {
+  int rows = 3;
+  int cols = 3;
+
+  S21Matrix given(rows, cols);
+  S21Matrix expected(rows, cols);
+
+  given(0, 0) = 1.0;
+  given(0, 1) = 2.0;
+  given(0, 2) = 3.0;
+  given(1, 0) = 0.0;
+  given(1, 1) = 4.0;
+  given(1, 2) = 2.0;
+  given(2, 0) = 5.0;
+  given(2, 1) = 2.0;
+  given(2, 2) = 1.0;
+
+  expected(0, 0) = 0.0;
+  expected(0, 1) = 10.0;
+  expected(0, 2) = -20.0;
+  expected(1, 0) = 4.0;
+  expected(1, 1) = -14.0;
+  expected(1, 2) = 8.0;
+  expected(2, 0) = -8.0;
+  expected(2, 1) = -2.0;
+  expected(2, 2) = 4.0;
+
+  S21Matrix res = given.CalcComplements();
+
+  ASSERT_TRUE(res == expected);
 }
 
 TEST(functions, inverse) {
@@ -287,8 +287,8 @@ TEST(functions, inverse2) {
 
 TEST(getters, default) {
   S21Matrix m;
-  EXPECT_EQ(m.GetCols(), 3);
-  EXPECT_EQ(m.GetRows(), 3);
+  EXPECT_EQ(m.GetCols(), 0);
+  EXPECT_EQ(m.GetRows(), 0);
 }
 
 TEST(getters, getters2) {
@@ -409,8 +409,13 @@ TEST(operator, mul) {
       m1(i, j) = (i + 1) * j + 1;
       m2(i, j) = (i + 1) * j + 1;
     }
-
+  S21Matrix m4 = m1 * m2;
+  S21Matrix m5(m1);
   m1.MulMatrix(m2);
+
+  m5 *= m2;
+  EXPECT_EQ(1, m1 == m4);
+  EXPECT_EQ(1, m1 == m5);
   EXPECT_EQ(3, m1.GetCols());
   EXPECT_EQ(3, m1.GetRows());
   for (int i = 0; i < m1.GetRows(); ++i)
@@ -435,6 +440,7 @@ TEST(operator, mul) {
 TEST(Test, operator_mulNumbereq) {
   S21Matrix B(3, 4);
   S21Matrix A(3, 4);
+  S21Matrix C(3, 4);
   B(0, 0) = 1;
   B(0, 1) = 2;
   B(0, 2) = 3;
@@ -461,8 +467,11 @@ TEST(Test, operator_mulNumbereq) {
   A(2, 2) = 22;
   A(2, 3) = 24;
 
+  C = B * 2;
   B *= 2;
+
   EXPECT_EQ(1, B == A);
+  EXPECT_EQ(1, C == B);
 }
 
 TEST(errors, error1) {
@@ -489,13 +498,13 @@ TEST(errors, error8) {
   S21Matrix B(4, 1);
   EXPECT_THROW(A.SubMatrix(B), std::invalid_argument);
 }
-TEST(errors, SetColumnsError) {
+TEST(errors, set_cols_error) {
   S21Matrix A;
-  EXPECT_THROW(A.SetCols(0), std::invalid_argument);
+  EXPECT_THROW(A.SetCols(-1), std::invalid_argument);
 }
-TEST(errors, SetRowsError) {
+TEST(errors, set_rows_error) {
   S21Matrix A;
-  EXPECT_THROW(A.SetRows(0), std::invalid_argument);
+  EXPECT_THROW(A.SetRows(-1), std::invalid_argument);
 }
 
 int main() {
