@@ -1,5 +1,5 @@
-#ifndef __S21MATRIX_HPP__
-#define __S21MATRIX_HPP__
+#ifndef __S21MATRIX_H__
+#define __S21MATRIX_H__
 
 #include <cmath>
 #include <cstring>

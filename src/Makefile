@@ -32,10 +32,10 @@ gcov_report:
 	open report/index.html
 
 style: 
-	clang-format --style=google $(SRCS_DIR)/*.cpp $(SRCS_DIR)/*.hpp $(TESTS_DIR)/*.cpp -n
+	clang-format --style=google $(SRCS_DIR)/*.cpp $(SRCS_DIR)/*.h $(TESTS_DIR)/*.cpp -n
 
 correct_style: 
-	clang-format --style=google $(SRCS_DIR)/*.cpp $(SRCS_DIR)/*.hpp $(TESTS_DIR)/*.cpp -i
+	clang-format --style=google $(SRCS_DIR)/*.cpp $(SRCS_DIR)/*.h $(TESTS_DIR)/*.cpp -i
 
 clean:
 	rm -rf *.o *.a test test_linux *.gcno *.gcda *.info report

@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "../matrix/s21_matrix_oop.hpp"
+#include "../matrix/s21_matrix_oop.h"
 
 TEST(constructors, negative) { EXPECT_ANY_THROW(S21Matrix m(-1, -2)); }
 

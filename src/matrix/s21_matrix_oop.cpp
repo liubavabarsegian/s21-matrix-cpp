@@ -1,4 +1,4 @@
-#include "s21_matrix_oop.hpp"
+#include "s21_matrix_oop.h"
 
 // default constructor
 S21Matrix::S21Matrix() noexcept : rows_(0), cols_(0), matrix_(nullptr) {}
@@ -14,12 +14,11 @@ S21Matrix::S21Matrix(int rows, int cols) : rows_(rows), cols_(cols) {
 void S21Matrix::createMatrix() noexcept {
   if (rows_ == 0 && cols_ == 0) {
     matrix_ = nullptr;
-  }
-  else if (rows_ > 0 && cols_ > 0) {
+  } else if (rows_ > 0 && cols_ > 0) {
     matrix_ = new double*[rows_];
     if (matrix_) {
       for (auto i = 0; i < rows_; i++) {
-        matrix_[i] = new double[cols_] ();
+        matrix_[i] = new double[cols_]();
       }
     }
   }
@@ -37,7 +36,8 @@ S21Matrix::S21Matrix(const S21Matrix& other) noexcept
 }
 
 // move constructor
-S21Matrix::S21Matrix(S21Matrix&& other) noexcept : rows_(0), cols_(0), matrix_(nullptr) {
+S21Matrix::S21Matrix(S21Matrix&& other) noexcept
+    : rows_(0), cols_(0), matrix_(nullptr) {
   *this = std::move(other);
 }
 
@@ -262,7 +262,6 @@ S21Matrix& S21Matrix::operator=(const S21Matrix& other) noexcept {
 
 S21Matrix& S21Matrix::operator=(S21Matrix&& other) noexcept {
   if (this != &other) {
-
     std::swap(rows_, other.rows_);
     std::swap(cols_, other.cols_);
     std::swap(matrix_, other.matrix_);
@@ -291,7 +290,7 @@ S21Matrix S21Matrix::operator-(const S21Matrix& other) const {
   return result;
 }
 
-S21Matrix S21Matrix::operator*(const S21Matrix& other)  const {
+S21Matrix S21Matrix::operator*(const S21Matrix& other) const {
   S21Matrix result(*this);
   result.MulMatrix(other);
   return result;
@@ -303,7 +302,9 @@ S21Matrix S21Matrix::operator*(double num) const {
   return result;
 }
 
-bool S21Matrix::operator==(const S21Matrix& other) const { return EqMatrix(other); }
+bool S21Matrix::operator==(const S21Matrix& other) const {
+  return EqMatrix(other);
+}
 
 S21Matrix& S21Matrix::operator+=(const S21Matrix& other) {
   SumMatrix(other);
