@@ -18,9 +18,10 @@ TEST(setters, set_cols) {
   m.SetCols(3);
   m(1, 2) = 999.999;
   EXPECT_EQ(m.GetCols(), 3);
-  EXPECT_EQ(m.GetCols(), 3);
   EXPECT_DOUBLE_EQ(m(1, 1), 123.456);
   EXPECT_DOUBLE_EQ(m(1, 2), 999.999);
+  m.SetCols(2);
+  EXPECT_EQ(m.GetCols(), 2);
 }
 
 TEST(setters, setrows) {

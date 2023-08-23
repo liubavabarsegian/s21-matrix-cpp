@@ -39,9 +39,6 @@ S21Matrix::S21Matrix(const S21Matrix& other) noexcept
 // move constructor
 S21Matrix::S21Matrix(S21Matrix&& other) noexcept : rows_(0), cols_(0), matrix_(nullptr) {
   *this = std::move(other);
-  // std::swap(rows_, other.rows_);
-  // std::swap(cols_, other.cols_);
-  // std::swap(matrix_, other.matrix_);
 }
 
 void S21Matrix::deleteMatrix() noexcept {
@@ -83,7 +80,6 @@ void S21Matrix::SetRows(int n) {
   *this = temp;
 };
 
-//ВОТ ЭТО НАДО ПЕРЕПИСАТЬ 
 // setter for cols
 void S21Matrix::SetCols(int n) {
   if (n < 0) {
@@ -259,26 +255,13 @@ S21Matrix S21Matrix::InverseMatrix() const {
 S21Matrix& S21Matrix::operator=(const S21Matrix& other) noexcept {
   if (this == &other) return *this;
 
-  this->deleteMatrix();
-
-  rows_ = other.rows_;
-  cols_ = other.cols_;
-
-  // Allocate new matrix
-  this->createMatrix();
-
-  // Copy values
-  for (auto i = 0; i < rows_; i++) {
-    for (auto j = 0; j < cols_; j++) {
-        (*this)(i, j) = other(i, j);
-    }
-  }
+  S21Matrix copy(other);
+  *this = std::move(copy);
   return *this;
 }
 
 S21Matrix& S21Matrix::operator=(S21Matrix&& other) noexcept {
   if (this != &other) {
-    // deleteMatrix();
 
     std::swap(rows_, other.rows_);
     std::swap(cols_, other.cols_);
@@ -297,7 +280,6 @@ double& S21Matrix::operator()(int row, int col) const {
 
 // operator + overload
 S21Matrix S21Matrix::operator+(const S21Matrix& other) const {
-  // creating result matrix
   S21Matrix result(*this);
   result.SumMatrix(other);
   return result;
