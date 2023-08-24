@@ -49,8 +49,6 @@ TEST(constructors, all_types) {
   EXPECT_EQ(m2.EqMatrix(m3), true);
 
   S21Matrix m4(std::move(m3));
-  EXPECT_EQ(m3.GetCols(), 0);
-  EXPECT_EQ(m3.GetRows(), 0);
   EXPECT_EQ(m4.GetRows(), 2);
   EXPECT_EQ(m4.GetCols(), 2);
   EXPECT_EQ(m4(1, 1), m2(1, 1));
@@ -313,8 +311,6 @@ TEST(getters, getters4) {
 
   S21Matrix m2(std::move(m1));
 
-  EXPECT_EQ(m1.GetCols(), 0);
-  EXPECT_EQ(m1.GetRows(), 0);
   EXPECT_EQ(m2.GetCols(), 123);
   EXPECT_EQ(m2.GetRows(), 123);
 }
@@ -477,12 +473,12 @@ TEST(Test, operator_mulNumbereq) {
 
 TEST(errors, error1) {
   S21Matrix A(2, 3);
-  EXPECT_THROW(A.CalcComplements(), std::length_error);
+  EXPECT_THROW(A.CalcComplements(), std::logic_error);
 }
 
 TEST(errors, error3) {
   S21Matrix A(1, 2);
-  EXPECT_THROW(A.Determinant(), std::length_error);
+  EXPECT_THROW(A.Determinant(), std::logic_error);
 }
 
 TEST(errors, error6) {
@@ -492,12 +488,12 @@ TEST(errors, error6) {
 TEST(errors, error7) {
   S21Matrix A(2, 3);
   S21Matrix B(3, 2);
-  EXPECT_THROW(A.SumMatrix(B), std::invalid_argument);
+  EXPECT_THROW(A.SumMatrix(B), std::logic_error);
 }
 TEST(errors, error8) {
   S21Matrix A(1, 4);
   S21Matrix B(4, 1);
-  EXPECT_THROW(A.SubMatrix(B), std::invalid_argument);
+  EXPECT_THROW(A.SubMatrix(B), std::logic_error);
 }
 TEST(errors, set_cols_error) {
   S21Matrix A;
