@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "../matrix/s21_matrix_oop.h"
+#include "s21_matrix/s21_matrix_oop.h"
 
 TEST(constructors, negative) { EXPECT_ANY_THROW(S21Matrix m(-1, -2)); }
 
@@ -52,13 +52,24 @@ TEST(constructors, all_types) {
   EXPECT_EQ(m4.GetRows(), 2);
   EXPECT_EQ(m4.GetCols(), 2);
   EXPECT_EQ(m4(1, 1), m2(1, 1));
+
+  S21Matrix m5(0, 0);
+  EXPECT_EQ(m5.GetRows(), 0);
+  EXPECT_EQ(m5.GetCols(), 0);
 }
 
 TEST(functions, eq) {
   S21Matrix m1(123, 123);
   S21Matrix m2(m1);
+  S21Matrix m3;
+  S21Matrix m4(1, 1);
+  S21Matrix m5(1, 1);
+  m4(0, 0) = 1.0;
+  m5(0, 0) = 2.0;
 
   EXPECT_EQ(m1.EqMatrix(m2), true);
+  EXPECT_EQ(m1.EqMatrix(m3), false);
+  EXPECT_EQ(m4.EqMatrix(m5), false);
 }
 
 TEST(functions, sum) {
@@ -197,7 +208,17 @@ TEST(functions, det3) {
   ASSERT_NEAR(res, -32, 1e-6);
 }
 
-TEST(functions, complements) {
+TEST(functions, det4) {
+  int size = 1;
+  S21Matrix m(size, size);
+
+  m(0, 0) = 2;
+
+  double res = m.Determinant();
+  ASSERT_NEAR(res, 2, 1e-6);
+}
+
+TEST(functions, complements1) {
   int rows = 3;
   int cols = 3;
 
@@ -227,6 +248,26 @@ TEST(functions, complements) {
   S21Matrix res = given.CalcComplements();
 
   ASSERT_TRUE(res == expected);
+}
+
+TEST(functions, complements2) {
+  int rows = 1;
+  int cols = 2;
+
+  S21Matrix m(rows, cols);
+
+  EXPECT_THROW(m.CalcComplements(), std::logic_error);
+}
+
+TEST(functions, complements3) {
+  int rows = 1;
+  int cols = 1;
+
+  S21Matrix given(rows, cols);
+  S21Matrix expected(rows, cols);
+  given(0, 0) = 10.10;
+  expected(0, 0) = 1;
+  ASSERT_TRUE(given.CalcComplements() == expected);
 }
 
 TEST(functions, inverse) {
@@ -300,7 +341,8 @@ TEST(getters, getters2) {
 TEST(getters, getters3) {
   S21Matrix m1(123, 123);
 
-  S21Matrix m2(m1);
+  S21Matrix m2;
+  m2 = m1;
 
   EXPECT_EQ(m1.GetCols(), m2.GetCols());
   EXPECT_EQ(m1.GetRows(), m2.GetRows());
@@ -438,6 +480,7 @@ TEST(Test, operator_mulNumbereq) {
   S21Matrix B(3, 4);
   S21Matrix A(3, 4);
   S21Matrix C(3, 4);
+  S21Matrix D(3, 4);
   B(0, 0) = 1;
   B(0, 1) = 2;
   B(0, 2) = 3;
@@ -465,10 +508,13 @@ TEST(Test, operator_mulNumbereq) {
   A(2, 3) = 24;
 
   C = B * 2;
+  D = 2 * B;
+  D = 2 * B;
   B *= 2;
 
   EXPECT_EQ(1, B == A);
   EXPECT_EQ(1, C == B);
+  EXPECT_EQ(1, D == B);
 }
 
 TEST(errors, error1) {
@@ -502,6 +548,32 @@ TEST(errors, set_cols_error) {
 TEST(errors, set_rows_error) {
   S21Matrix A;
   EXPECT_THROW(A.SetRows(-1), std::invalid_argument);
+}
+
+TEST(errors, get_minor_out_of_range) {
+  S21Matrix A(3, 3);
+  EXPECT_THROW(A.GetMinor(-1, -1), std::out_of_range);
+}
+
+TEST(errors, get_minor_not_square) {
+  S21Matrix A(2, 3);
+  EXPECT_THROW(A.GetMinor(1, 2), std::logic_error);
+}
+
+TEST(errors, compl_out_of_range) {
+  S21Matrix A(0, 0);
+  EXPECT_THROW(A.CalcComplements(), std::out_of_range);
+}
+
+TEST(errors, inverse) {
+  S21Matrix A(1, 1);
+  A(0, 0) = 0;
+  EXPECT_THROW(A.InverseMatrix(), std::logic_error);
+}
+
+TEST(errors, index_operator) {
+  S21Matrix A(1, 1);
+  EXPECT_THROW(A(-1, 0), std::logic_error);
 }
 
 int main() {

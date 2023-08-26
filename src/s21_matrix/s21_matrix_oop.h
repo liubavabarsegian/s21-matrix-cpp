@@ -1,5 +1,5 @@
-#ifndef __S21MATRIX_H__
-#define __S21MATRIX_H__
+#ifndef CPP1_S21_MATRIXPLUS_S21_MATRIX_S21_MATRIX_OOP_H_
+#define CPP1_S21_MATRIXPLUS_S21_MATRIX_S21_MATRIX_OOP_H_
 
 #include <cmath>
 #include <cstring>
@@ -7,14 +7,6 @@
 #include <utility>
 
 class S21Matrix {
- private:
-  // attributes
-  // rows and columns attributes
-  int rows_, cols_;
-  // pointer to the memory where the matrix will be allocated
-  double** matrix_;
-  void createMatrix();
-
  public:
   // constructors and destructors
   S21Matrix() noexcept;
@@ -58,6 +50,17 @@ class S21Matrix {
   S21Matrix CalcComplements() const;
   double Determinant() const;
   S21Matrix InverseMatrix() const;
+
+  // friend function
+  friend S21Matrix operator*(const double& value, const S21Matrix& matrix);
+
+ private:
+  // attributes
+  // rows and columns attributes
+  int rows_, cols_;
+  // pointer to the memory where the matrix will be allocated
+  double** matrix_;
+  void createMatrix();
 };
 
-#endif
+#endif  // CPP1_S21_MATRIXPLUS_S21_MATRIX_S21_MATRIX_OOP_H_

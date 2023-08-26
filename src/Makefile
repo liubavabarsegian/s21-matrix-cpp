@@ -1,11 +1,11 @@
 NAME = s21_matrix_oop.a
 CC = gcc
-CFLAGS = -Wall -Werror -Wextra -std=c++17 -lstdc++ -lm
-SRCS =	matrix/s21_matrix_oop.cpp
-TEST_SRCS =	tests/tests.cpp
+CFLAGS = -Wall -Werror -Wextra -std=c++17 -lstdc++ -lm -I.
+SRCS =	s21_matrix/s21_matrix_oop.cc
+TEST_SRCS =	tests/tests.cc
 TEST_FLAGS = -lgtest -lpthread
 GCOV_FLAGS = -ftest-coverage -fprofile-arcs
-SRCS_DIR = matrix
+SRCS_DIR = s21_matrix
 TESTS_DIR = tests
 
 all: $(NAME) test gcov_report
@@ -32,10 +32,10 @@ gcov_report:
 	open report/index.html
 
 style: 
-	clang-format --style=google $(SRCS_DIR)/*.cpp $(SRCS_DIR)/*.h $(TESTS_DIR)/*.cpp -n
+	clang-format --style=google $(SRCS_DIR)/*.cc $(SRCS_DIR)/*.h $(TESTS_DIR)/*.cc -n
 
 correct_style: 
-	clang-format --style=google $(SRCS_DIR)/*.cpp $(SRCS_DIR)/*.h $(TESTS_DIR)/*.cpp -i
+	clang-format --style=google $(SRCS_DIR)/*.cc $(SRCS_DIR)/*.h $(TESTS_DIR)/*.cc -i
 
 clean:
 	rm -rf *.o *.a test test_linux *.gcno *.gcda *.info report

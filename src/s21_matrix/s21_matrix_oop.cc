@@ -1,4 +1,4 @@
-#include "s21_matrix_oop.h"
+#include "s21_matrix/s21_matrix_oop.h"
 
 // default constructor
 S21Matrix::S21Matrix() noexcept : rows_(0), cols_(0), matrix_(nullptr) {}
@@ -12,7 +12,7 @@ S21Matrix::S21Matrix(int rows, int cols) : rows_(rows), cols_(cols) {
 }
 
 void S21Matrix::createMatrix() {
-  if (rows_ == 0 && cols_ == 0) {
+  if (rows_ == 0 || cols_ == 0) {
     matrix_ = nullptr;
   } else if (rows_ > 0 && cols_ > 0) {
     matrix_ = new double*[rows_];
@@ -81,19 +81,17 @@ void S21Matrix::SetCols(int cols) {
 };
 
 bool S21Matrix::EqMatrix(const S21Matrix& other) const noexcept {
-  bool equal = true;
   if (rows_ != other.rows_ && cols_ != other.cols_) {
-    equal = false;
-  } else {
-    for (auto i = 0; i < rows_; i++) {
-      for (auto j = 0; j < cols_; j++) {
-        if (std::fabs((*this)(i, j) - other(i, j)) > 1e-7) {
-          equal = false;
-        }
+    return false;
+  }
+  for (auto i = 0; i < rows_; i++) {
+    for (auto j = 0; j < cols_; j++) {
+      if (std::fabs(this->matrix_[i][j] - other.matrix_[i][j]) > 1e-7) {
+        return false;
       }
     }
   }
-  return equal;
+  return true;
 }
 
 void S21Matrix::SumMatrix(const S21Matrix& other) {
@@ -174,23 +172,27 @@ double S21Matrix::Determinant() const {
 
 S21Matrix S21Matrix::GetMinor(int rows, int cols) const {
   if (rows < 0 || cols < 0 || rows >= rows_ || cols >= cols_) {
-    throw std::out_of_range("Rows and columns must be positive.");
+    throw std::out_of_range("Rows and columns out of range.");
   }
+  if (rows_ != cols_) {
+    throw std::logic_error("The matrix is not square.");
+  }
+
   S21Matrix result(rows_ - 1, cols_ - 1);
-  int currentRow = 0;
+  int current_row = 0;
   for (auto i = 0; i < rows_; i++) {
     if (i == rows) {
       continue;
     }
-    int currentCol = 0;
+    int current_col = 0;
     for (auto j = 0; j < cols_; j++) {
       if (j == cols) {
         continue;
       }
-      result(currentRow, currentCol) = (*this)(i, j);
-      currentCol++;
+      result(current_row, current_col) = (*this)(i, j);
+      current_col++;
     }
-    currentRow++;
+    current_row++;
   }
   return result;
 }
@@ -199,10 +201,9 @@ S21Matrix S21Matrix::CalcComplements() const {
   if (rows_ <= 0 || cols_ <= 0) {
     throw std::out_of_range("Rows and columns must be positive.");
   }
-
   S21Matrix result(rows_, cols_);
   if (rows_ == 1 && cols_ == 1) {
-    result(0, 0) = (*this)(0, 0);
+    result(0, 0) = 1;
   } else {
     for (auto i = 0; i < rows_; i++) {
       for (auto j = 0; j < cols_; j++) {
@@ -215,12 +216,11 @@ S21Matrix S21Matrix::CalcComplements() const {
 
 S21Matrix S21Matrix::InverseMatrix() const {
   double det = Determinant();
-  if (std::fabs(det - 0) < 1e-7) {
+  if (std::fabs(det) < 1e-7) {
     throw std::logic_error("Zero determinant.");
   }
 
-  S21Matrix result = CalcComplements().Transpose() * (1 / det);
-  return result;
+  return CalcComplements().Transpose() * (1 / det);
 }
 
 S21Matrix& S21Matrix::operator=(const S21Matrix& other) {
@@ -302,4 +302,9 @@ S21Matrix& S21Matrix::operator*=(const S21Matrix& other) {
 S21Matrix& S21Matrix::operator*=(double num) {
   MulNumber(num);
   return *this;
+}
+
+S21Matrix operator*(const double& value, const S21Matrix& matrix) {
+  S21Matrix res(matrix);
+  return res *= value;
 }
